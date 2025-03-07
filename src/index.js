@@ -9,7 +9,6 @@ const PORT = process.env.PORT || 8000;
 
 const app = express();
 
-
 // CORS configuration
 app.use(
   cors({
@@ -23,7 +22,7 @@ app.use(express.json());
 connectDB();
 
 // Use the defined routes
-app.use(routes);
+app.use("/api", routes);
 
 app.listen(PORT, () => {
   const baseUrl = `http://localhost:${PORT}`;

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { seedUsers } from './users.seed.js';
+import { seedSeeds } from './seeds.seed.js';
 
 const runSeeds = async () => {
   try {
@@ -10,6 +11,7 @@ const runSeeds = async () => {
 
     console.log('Running seeds...');
     await seedUsers();
+    await seedSeeds();
     
     console.log('All seeds completed successfully');
   } catch (error) {

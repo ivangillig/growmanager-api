@@ -1,5 +1,6 @@
 import { Router } from "express";
 import authRoutes from "./auth.routes.js";
+import seedsRoutes from "./seedsRoutes.js";
 
 const router = Router();
 
@@ -10,5 +11,6 @@ router.get("/health", (req, res) => {
 
 // Routes
 router.use("/auth", authRoutes);
+router.use("/seeds", seedsRoutes);
 
 export default router;
