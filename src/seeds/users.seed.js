@@ -3,7 +3,7 @@ import User from '../models/User.js'
 
 const users = [
   {
-    email: 'guillermo@greentrack.com',
+    email: 'guillermo@growmanager.com',
     password: 'guillermo',
     username: 'guillermo',
     role: 'grower',

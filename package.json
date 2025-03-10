@@ -1,7 +1,7 @@
 {
-  "name": "greentrack-api",
+  "name": "growmanager-api",
   "version": "1.0.0",
-  "description": "REST API for GreenTrack",
+  "description": "REST API for GrowManager",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
