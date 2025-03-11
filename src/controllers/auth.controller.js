@@ -74,7 +74,9 @@ export const login = async (req, res) => {
     const session = new Session({
       userId: user._id,
       token,
-      expiresAt: new Date(Date.now() + parseInt(process.env.JWT_EXPIRES_IN) * 1000),
+      expiresAt: new Date(
+        Date.now() + parseInt(process.env.JWT_EXPIRES_IN) * 1000
+      ),
     })
     await session.save()
 

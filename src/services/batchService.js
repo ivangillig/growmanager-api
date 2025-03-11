@@ -49,6 +49,6 @@ export const deleteBatchService = async (id) => {
     throw new Error(ERROR_BATCH_NOT_FOUND)
   }
 
-  await batch.remove()
+  await batch.deleteOne()
   return batch
 }
