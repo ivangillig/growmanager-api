@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const seedSchema = new mongoose.Schema(
   {
@@ -15,18 +15,23 @@ const seedSchema = new mongoose.Schema(
     chemoType: {
       type: String,
       required: true,
-      enum: ["1", "2", "3"],
+      enum: ['1', '2', '3'],
     },
     imageUrl: {
       type: String,
       default: null,
     },
+    cannabinoids: {
+      type: [String],
+      enum: ['THC', 'CBD', 'CBG', 'CBN', 'CBC'],
+      default: [],
+    },
   },
   {
     timestamps: true,
   }
-);
+)
 
-const Seed = mongoose.model("Seed", seedSchema);
+const Seed = mongoose.model('Seed', seedSchema)
 
-export default Seed;
+export default Seed
