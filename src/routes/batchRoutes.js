@@ -11,29 +11,29 @@ import {
 } from '../controllers/batchController.js'
 import { check, validationResult } from 'express-validator'
 import {
-  ERROR_PRODUCTION_DATE_REQUIRED,
   ERROR_SEED_ID_REQUIRED,
-  ERROR_THC_REQUIRED,
-  ERROR_CBD_REQUIRED,
-  ERROR_DRYING_TIME_REQUIRED,
-  ERROR_QUANTITY_PRODUCED_REQUIRED,
-  ERROR_RAV_REQUIRED,
+  ERROR_GERMINATION_DATE_REQUIRED,
 } from '../constants/messages.js'
 
 const router = Router()
 
 const validateBatch = [
-  check('production_date')
+  check('productionDate').optional().isISO8601().toDate(),
+  check('seedId').notEmpty().withMessage(ERROR_SEED_ID_REQUIRED).isMongoId(),
+  check('thc').optional().isNumeric(),
+  check('cbd').optional().isNumeric(),
+  check('dryingTime').optional().isNumeric(),
+  check('qtyProduced').optional().isNumeric(),
+  check('rav').optional().isString(),
+  check('germinationDate')
     .notEmpty()
-    .withMessage(ERROR_PRODUCTION_DATE_REQUIRED),
-  check('seedId').notEmpty().withMessage(ERROR_SEED_ID_REQUIRED),
-  check('thc').notEmpty().withMessage(ERROR_THC_REQUIRED),
-  check('cbd').notEmpty().withMessage(ERROR_CBD_REQUIRED),
-  check('drying_time').notEmpty().withMessage(ERROR_DRYING_TIME_REQUIRED),
-  check('quantity_produced')
-    .notEmpty()
-    .withMessage(ERROR_QUANTITY_PRODUCED_REQUIRED),
-  check('rav').notEmpty().withMessage(ERROR_RAV_REQUIRED),
+    .withMessage(ERROR_GERMINATION_DATE_REQUIRED)
+    .isISO8601()
+    .toDate(),
+  check('isCutting').optional().isBoolean(),
+  check('firstTransplateDate').optional().isISO8601().toDate(),
+  check('secondTransplateDate').optional().isISO8601().toDate(),
+  check('photoperiodChangeDate').optional().isISO8601().toDate(),
 ]
 
 const handleValidationErrors = (req, res, next) => {

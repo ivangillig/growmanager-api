@@ -9,9 +9,9 @@ const batchSchema = new mongoose.Schema(
       uppercase: true,
       trim: true,
     },
-    production_date: {
+    productionDate: {
       type: Date,
-      required: true,
+      required: false,
     },
     seedId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -20,23 +20,47 @@ const batchSchema = new mongoose.Schema(
     },
     thc: {
       type: Number,
-      required: true,
+      required: false,
     },
     cbd: {
       type: Number,
-      required: true,
+      required: false,
     },
-    drying_time: {
+    dryingTime: {
       type: Number,
-      required: true,
+      required: false,
     },
-    quantity_produced: {
+    qtyProduced: {
       type: Number,
-      required: true,
+      required: false,
     },
     rav: {
       type: String,
+      required: false,
+    },
+    germinationDate: {
+      type: Date,
       required: true,
+    },
+    isCutting: {
+      type: Boolean,
+      required: false,
+    },
+    firstTransplateDate: {
+      type: Date,
+      required: false,
+    },
+    secondTransplateDate: {
+      type: Date,
+      required: false,
+    },
+    photoperiodChangeDate: {
+      type: Date,
+      required: false,
+    },
+    cuttingDate: {
+      type: Date,
+      required: false,
     },
   },
   {

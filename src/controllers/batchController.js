@@ -34,27 +34,37 @@ export const getAllBatches = async (req, res) => {
 
 export const createBatch = async (req, res) => {
   const {
-    production_date,
+    productionDate,
     seedId,
     thc,
     cbd,
-    drying_time,
-    quantity_produced,
+    dryingTime,
+    qtyProduced,
     rav,
+    germinationDate,
+    isCutting,
+    firstTransplateDate,
+    secondTransplateDate,
+    photoperiodChangeDate,
   } = req.body
 
   try {
-    const batchCode = await generateBatchCode(new Date(production_date), seedId)
+    const batchCode = await generateBatchCode(new Date(productionDate), seedId)
 
     const newBatch = await createBatchService({
       batchCode,
-      production_date,
+      productionDate,
       seedId,
       thc,
       cbd,
-      drying_time,
-      quantity_produced,
+      dryingTime,
+      qtyProduced,
       rav,
+      germinationDate,
+      isCutting,
+      firstTransplateDate,
+      secondTransplateDate,
+      photoperiodChangeDate,
     })
 
     res.status(201).json(buildSuccessResponse({ batch: newBatch }))
@@ -68,24 +78,34 @@ export const createBatch = async (req, res) => {
 export const updateBatch = async (req, res) => {
   const { id } = req.params
   const {
-    production_date,
+    productionDate,
     seedId,
     thc,
     cbd,
-    drying_time,
-    quantity_produced,
+    dryingTime,
+    qtyProduced,
     rav,
+    germinationDate,
+    isCutting,
+    firstTransplateDate,
+    secondTransplateDate,
+    photoperiodChangeDate,
   } = req.body
 
   try {
     const updatedBatch = await updateBatchService(id, {
-      production_date,
+      productionDate,
       seedId,
       thc,
       cbd,
-      drying_time,
-      quantity_produced,
+      dryingTime,
+      qtyProduced,
       rav,
+      germinationDate,
+      isCutting,
+      firstTransplateDate,
+      secondTransplateDate,
+      photoperiodChangeDate,
     })
 
     res.json(buildSuccessResponse({ batch: updatedBatch }))

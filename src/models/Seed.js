@@ -21,6 +21,14 @@ const seedSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    ratio: {
+      type: String,
+      default: null,
+    },
+    dominance: {
+      type: String,
+      default: null,
+    },
     cannabinoids: {
       type: [String],
       enum: ['THC', 'CBD', 'CBG', 'CBN', 'CBC'],

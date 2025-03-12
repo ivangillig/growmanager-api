@@ -5,16 +5,16 @@ import {
   ERROR_BATCH_NOT_FOUND,
 } from '../constants/messages.js'
 
-export const generateBatchCode = async (production_date, seedId) => {
+export const generateBatchCode = async (productionDate, seedId) => {
   const seed = await Seed.findById(seedId)
   if (!seed) {
     throw new Error(ERROR_SEED_NOT_FOUND)
   }
 
-  const dateStr = production_date.toISOString().slice(0, 10).replace(/-/g, '')
+  const dateStr = productionDate.toISOString().slice(0, 10).replace(/-/g, '')
   const genetic = seed.genetic.toUpperCase().replace(/\s+/g, '')
   const existingBatches = await Batch.find({
-    production_date,
+    productionDate,
     seedId,
   })
 

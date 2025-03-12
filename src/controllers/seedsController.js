@@ -32,7 +32,7 @@ const upload = multer({
 export const getAllSeeds = async (req, res) => {
   try {
     const seeds = await Seed.find().select(
-      '_id genetic seedBank chemoType cannabinoids imageUrl'
+      '_id genetic seedBank chemoType cannabinoids imageUrl ratio dominance'
     )
     res.json(seeds)
   } catch (error) {
@@ -52,7 +52,7 @@ export const createSeed = [
     }
   },
   async (req, res) => {
-    const { genetic, seedBank, chemoType } = req.body
+    const { genetic, seedBank, chemoType, ratio, dominance } = req.body
     let cannabinoids = req.body.cannabinoids
 
     if (!genetic || !seedBank || !chemoType) {
@@ -89,6 +89,8 @@ export const createSeed = [
         chemoType,
         imageUrl,
         cannabinoids,
+        ratio,
+        dominance,
       })
 
       await newSeed.save()
