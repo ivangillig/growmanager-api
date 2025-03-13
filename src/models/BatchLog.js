@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const BatchLogSchema = new mongoose.Schema(
+const batchLogSchema = new mongoose.Schema(
   {
     batchId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -77,4 +77,6 @@ const BatchLogSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-module.exports = mongoose.model('BatchLog', BatchLogSchema)
+const BatchLog = mongoose.model('BatchLog', batchLogSchema)
+
+export default BatchLog
