@@ -9,7 +9,11 @@ import {
   ERROR_INVALID_PRUNING_TYPE,
   ERROR_INVALID_TRAINING_TECHNIQUE,
 } from '../constants/messages.js'
-import { createBatchLog } from '../controllers/batchLogController.js'
+import {
+  createBatchLog,
+  updateBatchLog,
+  deleteBatchLog,
+} from '../controllers/batchLogController.js'
 
 const router = Router()
 
@@ -82,5 +86,16 @@ router.post(
   handleValidationErrors,
   createBatchLog
 )
+
+router.put(
+  '/:id',
+  authenticateUser,
+  authorizeRoles('grower', 'admin'),
+  validateBatchLog,
+  handleValidationErrors,
+  updateBatchLog
+)
+
+router.delete('/:id', authenticateUser, authorizeRoles('admin'), deleteBatchLog)
 
 export default router
