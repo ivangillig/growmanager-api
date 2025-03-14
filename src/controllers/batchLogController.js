@@ -7,6 +7,7 @@ import {
   ERROR_DELETING_BATCH_LOG,
   SUCCESS_BATCH_LOG_DELETED,
   SUCCESS_BATCH_LOG_CREATED,
+  ERROR_FETCHING_BATCH_LOGS,
 } from '../constants/messages.js'
 import {
   buildSuccessResponse,
@@ -17,6 +18,7 @@ import {
   createBatchLogService,
   updateBatchLogService,
   deleteBatchLogService,
+  getBatchLogsService,
 } from '../services/batchLogService.js'
 
 export const createBatchLog = async (req, res) => {
@@ -57,10 +59,9 @@ export const createBatchLog = async (req, res) => {
       observations,
     })
 
-    // res.status(201).json(buildSuccessResponse({ batchLog: newBatchLog }))
     res
       .status(201)
-      .json(buildSuccessResponse({ message: SUCCESS_BATCH_LOG_CREATED }))
+      .json(buildSuccessResponse({ batchLog: newBatchLog }))
   } catch (error) {
     res
       .status(500)
@@ -125,5 +126,27 @@ export const deleteBatchLog = async (req, res) => {
     res
       .status(500)
       .json(getServerErrorResponse(ERROR_DELETING_BATCH_LOG, error.message))
+  }
+}
+
+export const getBatchLogs = async (req, res) => {
+  const { id: batchId } = req.params
+  const limit = parseInt(req.query.limit) || 10
+  const page = parseInt(req.query.page) || 1
+
+  try {
+    const { logs, totalLogs } = await getBatchLogsService(batchId, limit, page)
+    res.json(
+      buildSuccessResponse({
+        data: logs,
+        limit,
+        page,
+        totalLogs,
+      })
+    )
+  } catch (error) {
+    res
+      .status(500)
+      .json(getServerErrorResponse(ERROR_FETCHING_BATCH_LOGS, error.message))
   }
 }

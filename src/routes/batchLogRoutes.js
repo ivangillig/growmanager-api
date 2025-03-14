@@ -13,6 +13,7 @@ import {
   createBatchLog,
   updateBatchLog,
   deleteBatchLog,
+  getBatchLogs,
 } from '../controllers/batchLogController.js'
 
 const router = Router()
@@ -97,5 +98,13 @@ router.put(
 )
 
 router.delete('/:id', authenticateUser, authorizeRoles('admin'), deleteBatchLog)
+
+router.get(
+  '/:id',
+  authenticateUser,
+  authorizeRoles('grower', 'admin'),
+  handleValidationErrors,
+  getBatchLogs
+)
 
 export default router
