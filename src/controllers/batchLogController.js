@@ -59,9 +59,7 @@ export const createBatchLog = async (req, res) => {
       observations,
     })
 
-    res
-      .status(201)
-      .json(buildSuccessResponse({ batchLog: newBatchLog }))
+    res.status(201).json(buildSuccessResponse({ batchLog: newBatchLog }))
   } catch (error) {
     res
       .status(500)
@@ -139,9 +137,11 @@ export const getBatchLogs = async (req, res) => {
     res.json(
       buildSuccessResponse({
         data: logs,
-        limit,
-        page,
-        totalLogs,
+        pagination: {
+          limit,
+          page,
+          total: totalLogs,
+        },
       })
     )
   } catch (error) {
