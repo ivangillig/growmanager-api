@@ -3,7 +3,8 @@ import Batch from '../models/Batch.js'
 import { ERROR_BATCH_NOT_FOUND } from '../constants/messages.js'
 
 export const createBatchLogService = async (batchLogData) => {
-  const newBatchLog = new BatchLog(batchLogData)
+  const { eventType, ...data } = batchLogData
+  const newBatchLog = new BatchLog({ ...data, eventType })
   await newBatchLog.save()
   return newBatchLog
 }
@@ -36,7 +37,7 @@ export const getBatchLogsService = async (batchId, limit = 10, page = 1) => {
   }
 
   const logs = await BatchLog.find({ batchId })
-    .sort({ interventionDate: -1 })
+    .sort({ eventDate: -1 })
     .limit(limit)
     .skip((page - 1) * limit)
 

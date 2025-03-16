@@ -20,34 +20,17 @@ const router = Router()
 
 const validateBatchLog = [
   check('batchId').notEmpty().isMongoId(),
-  check('interventionDate').notEmpty().isISO8601().toDate(),
+  check('eventDate').notEmpty().isISO8601().toDate(),
+  check('eventType').notEmpty().isString(),
   check('plantHeight').optional().isNumeric(),
   check('relativeHumidity').optional().isNumeric(),
   check('soilHumidity').optional().isNumeric(),
   check('temperature').optional().isNumeric(),
   check('ph').optional().isNumeric(),
-  check('interventions')
-    .optional()
-    .isArray()
-    .custom((value) => {
-      const validInterventions = [
-        'fertilization',
-        'pesticides',
-        'pruning',
-        'defoliation',
-        'training',
-      ]
-      for (const intervention of value) {
-        if (!validInterventions.includes(intervention)) {
-          throw new Error(ERROR_INVALID_INTERVENTION)
-        }
-      }
-      return true
-    }),
-  check('fertilizerType').optional().isString(),
-  check('fertilizerDose').optional().isNumeric(),
   check('pesticideType').optional().isString(),
   check('pesticideDose').optional().isNumeric(),
+  check('fertilizerType').optional().isString(),
+  check('fertilizerDose').optional().isNumeric(),
   check('pruningType')
     .optional()
     .isString()

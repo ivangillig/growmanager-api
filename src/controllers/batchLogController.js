@@ -1,8 +1,5 @@
 import {
   ERROR_CREATING_BATCH_LOG,
-  ERROR_INVALID_INTERVENTION,
-  ERROR_INVALID_PRUNING_TYPE,
-  ERROR_INVALID_TRAINING_TECHNIQUE,
   ERROR_UPDATING_BATCH_LOG,
   ERROR_DELETING_BATCH_LOG,
   SUCCESS_BATCH_LOG_DELETED,
@@ -11,7 +8,6 @@ import {
 } from '../constants/messages.js'
 import {
   buildSuccessResponse,
-  getBusinessErrorResponse,
   getServerErrorResponse,
 } from '../utils/responseUtils.js'
 import {
@@ -22,43 +18,8 @@ import {
 } from '../services/batchLogService.js'
 
 export const createBatchLog = async (req, res) => {
-  const {
-    batchId,
-    interventionDate,
-    plantHeight,
-    relativeHumidity,
-    soilHumidity,
-    temperature,
-    ph,
-    interventions,
-    fertilizerType,
-    fertilizerDose,
-    pesticideType,
-    pesticideDose,
-    pruningType,
-    trainingTechnique,
-    observations,
-  } = req.body
-
   try {
-    const newBatchLog = await createBatchLogService({
-      batchId,
-      interventionDate,
-      plantHeight,
-      relativeHumidity,
-      soilHumidity,
-      temperature,
-      ph,
-      interventions,
-      fertilizerType,
-      fertilizerDose,
-      pesticideType,
-      pesticideDose,
-      pruningType,
-      trainingTechnique,
-      observations,
-    })
-
+    const newBatchLog = await createBatchLogService(req.body)
     res.status(201).json(buildSuccessResponse({ batchLog: newBatchLog }))
   } catch (error) {
     res
@@ -69,43 +30,9 @@ export const createBatchLog = async (req, res) => {
 
 export const updateBatchLog = async (req, res) => {
   const { id } = req.params
-  const {
-    batchId,
-    interventionDate,
-    plantHeight,
-    relativeHumidity,
-    soilHumidity,
-    temperature,
-    ph,
-    interventions,
-    fertilizerType,
-    fertilizerDose,
-    pesticideType,
-    pesticideDose,
-    pruningType,
-    trainingTechnique,
-    observations,
-  } = req.body
 
   try {
-    const updatedBatchLog = await updateBatchLogService(id, {
-      batchId,
-      interventionDate,
-      plantHeight,
-      relativeHumidity,
-      soilHumidity,
-      temperature,
-      ph,
-      interventions,
-      fertilizerType,
-      fertilizerDose,
-      pesticideType,
-      pesticideDose,
-      pruningType,
-      trainingTechnique,
-      observations,
-    })
-
+    const updatedBatchLog = await updateBatchLogService(id, req.body)
     res.json(buildSuccessResponse({ batchLog: updatedBatchLog }))
   } catch (error) {
     res
