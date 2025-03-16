@@ -29,7 +29,7 @@ const batchLogBaseSchema = new mongoose.Schema(
 const BatchLog = mongoose.model('BatchLog', batchLogBaseSchema)
 
 const PesticidesLog = BatchLog.discriminator(
-  'pesticides',
+  'Pesticides',
   new mongoose.Schema({
     pesticideType: { type: String, required: false },
     pesticideDose: { type: Number, required: false },
@@ -37,7 +37,7 @@ const PesticidesLog = BatchLog.discriminator(
 )
 
 const FertilizationLog = BatchLog.discriminator(
-  'fertilization',
+  'Fertilization',
   new mongoose.Schema({
     fertilizerType: { type: String, required: false },
     fertilizerDose: { type: Number, required: false },
@@ -45,7 +45,7 @@ const FertilizationLog = BatchLog.discriminator(
 )
 
 const PruningLog = BatchLog.discriminator(
-  'pruning',
+  'Pruning',
   new mongoose.Schema({
     pruningType: {
       type: String,
@@ -56,7 +56,7 @@ const PruningLog = BatchLog.discriminator(
 )
 
 const DataRecordLog = BatchLog.discriminator(
-  'dataRecord',
+  'Data record',
   new mongoose.Schema({
     plantHeight: { type: Number, required: false },
     relativeHumidity: { type: Number, required: false },
@@ -67,7 +67,7 @@ const DataRecordLog = BatchLog.discriminator(
 )
 
 const ManualWateringLog = BatchLog.discriminator(
-  'manualWatering',
+  'Manual watering',
   new mongoose.Schema({
     waterAmount: { type: Number, required: false },
     waterPh: { type: Number, required: false },
@@ -77,7 +77,7 @@ const ManualWateringLog = BatchLog.discriminator(
 )
 
 const TrainingLog = BatchLog.discriminator(
-  'training',
+  'Training',
   new mongoose.Schema({
     trainingTechnique: {
       type: String,
