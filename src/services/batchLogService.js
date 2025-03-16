@@ -30,18 +30,30 @@ export const deleteBatchLogService = async (id) => {
   return batchLog
 }
 
-export const getBatchLogsService = async (batchId, limit = 10, page = 1) => {
+export const getBatchLogsService = async (
+  batchId,
+  limit = 10,
+  page = 1,
+  eventTypes = null,
+  sortField = 'eventDate',
+  sortOrder = 'desc'
+) => {
   const batch = await Batch.findById(batchId)
   if (!batch) {
     throw new Error(ERROR_BATCH_NOT_FOUND)
   }
 
-  const logs = await BatchLog.find({ batchId })
-    .sort({ eventDate: -1 })
+  const query = { batchId }
+  if (eventTypes) {
+    query.eventType = { $in: eventTypes }
+  }
+
+  const logs = await BatchLog.find(query)
+    .sort({ [sortField]: sortOrder === 'asc' ? 1 : -1 })
     .limit(limit)
     .skip((page - 1) * limit)
 
-  const totalLogs = await BatchLog.countDocuments({ batchId })
+  const totalLogs = await BatchLog.countDocuments(query)
 
   return { logs, totalLogs }
 }

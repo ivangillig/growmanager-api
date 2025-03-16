@@ -56,11 +56,20 @@ export const deleteBatchLog = async (req, res) => {
 
 export const getBatchLogs = async (req, res) => {
   const { id: batchId } = req.params
-  const limit = parseInt(req.query.limit) || 10
-  const page = parseInt(req.query.page) || 1
+  const limit = parseInt(req.query.limit)
+  const page = parseInt(req.query.page)
+  const eventTypes = req.query.eventType ? req.query.eventType.split(',') : null
+  const { sortField, sortOrder } = req.query
 
   try {
-    const { logs, totalLogs } = await getBatchLogsService(batchId, limit, page)
+    const { logs, totalLogs } = await getBatchLogsService(
+      batchId,
+      limit,
+      page,
+      eventTypes,
+      sortField,
+      sortOrder
+    )
     res.json(
       buildSuccessResponse({
         data: logs,
