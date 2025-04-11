@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       enum: ['admin', 'grower', 'seller', 'patient'],
     },
+    organization: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Organization',
+    },
   },
   {
     timestamps: true,

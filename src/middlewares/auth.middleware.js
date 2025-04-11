@@ -9,6 +9,7 @@ import {
   ERROR_USER_NOT_FOUND,
   ERROR_UNAUTHORIZED,
   ERROR_SESSION_EXPIRED,
+  ERROR_ORGANIZATION_REQUIRED,
 } from '../constants/messages.js'
 
 export const authenticateToken = (req, res, next) => {
@@ -80,4 +81,11 @@ export const authorizeRoles = (...allowedRoles) => {
     }
     next()
   }
+}
+
+export const restrictWithoutOrganization = (req, res, next) => {
+  if (!req.user.organization) {
+    return res.json(getUnauthorizedErrorResponse(ERROR_ORGANIZATION_REQUIRED))
+  }
+  next()
 }
