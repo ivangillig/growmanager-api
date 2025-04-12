@@ -44,10 +44,10 @@ const handleValidationErrors = (req, res, next) => {
   next()
 }
 
-router.get('/', authenticateUser, authorizeRoles('grower'), getAllBatches)
+router.get('/', authenticateUser(), authorizeRoles('grower'), getAllBatches)
 router.post(
   '/',
-  authenticateUser,
+  authenticateUser(),
   authorizeRoles('grower'),
   validateBatch,
   handleValidationErrors,
@@ -55,12 +55,12 @@ router.post(
 )
 router.put(
   '/:id',
-  authenticateUser,
+  authenticateUser(),
   authorizeRoles('grower'),
   validateBatch,
   handleValidationErrors,
   updateBatch
 )
-router.delete('/:id', authenticateUser, authorizeRoles('grower'), deleteBatch)
+router.delete('/:id', authenticateUser(), authorizeRoles('grower'), deleteBatch)
 
 export default router

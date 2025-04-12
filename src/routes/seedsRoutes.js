@@ -4,7 +4,7 @@ import { getAllSeeds, createSeed } from "../controllers/seedsController.js";
 
 const router = Router();
 
-router.get("/", authenticateUser, getAllSeeds);
-router.post("/", authenticateUser, createSeed);
+router.get("/", authenticateUser(), getAllSeeds);
+router.post("/", authenticateUser(), createSeed);
 
 export default router;

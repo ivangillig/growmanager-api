@@ -35,37 +35,40 @@ export const authenticateToken = (req, res, next) => {
   })
 }
 
-export const authenticateUser = async (req, res, next) => {
-  const authHeader = req.header('Authorization')
+export const authenticateUser =
+  (skipOrganizationCheck = false) =>
+  async (req, res, next) => {
+    const authHeader = req.header('Authorization')
 
-  if (!authHeader) {
-    return res
-      .status(401)
-      .json(getUnauthorizedErrorResponse(ERROR_INVALID_TOKEN))
-  }
-
-  const token = authHeader.replace('Bearer ', '')
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    const user = await User.findById(decoded.id).select('username email role')
-
-    if (!user) {
-      return res
-        .status(401)
-        .json(getNotFoundErrorResponse(ERROR_USER_NOT_FOUND))
+    if (!authHeader) {
+      return next(getUnauthorizedErrorResponse(ERROR_INVALID_TOKEN))
     }
 
-    req.user = user
-    next()
-  } catch (error) {
-    const errorMessage =
-      error.name === 'TokenExpiredError'
-        ? ERROR_SESSION_EXPIRED
-        : ERROR_INVALID_TOKEN
-    res.status(401).json(getUnauthorizedErrorResponse(errorMessage))
+    const token = authHeader.replace('Bearer ', '')
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET)
+      const user = await User.findById(decoded.id).select(
+        'username email role organization'
+      )
+
+      if (!user) {
+        return next(getNotFoundErrorResponse(ERROR_USER_NOT_FOUND))
+      }
+
+      if (!skipOrganizationCheck && !user.organization) {
+        return next(getUnauthorizedErrorResponse(ERROR_ORGANIZATION_REQUIRED))
+      }
+
+      req.user = user
+      next()
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return next(getUnauthorizedErrorResponse(ERROR_SESSION_EXPIRED))
+      }
+      next(error)
+    }
   }
-}
 
 export const authorizeRoles = (...allowedRoles) => {
   return (req, res, next) => {
@@ -81,11 +84,4 @@ export const authorizeRoles = (...allowedRoles) => {
     }
     next()
   }
-}
-
-export const restrictWithoutOrganization = (req, res, next) => {
-  if (!req.user.organization) {
-    return res.json(getUnauthorizedErrorResponse(ERROR_ORGANIZATION_REQUIRED))
-  }
-  next()
 }

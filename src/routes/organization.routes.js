@@ -7,7 +7,7 @@ import {
 
 const router = Router()
 
-router.post('/', authenticateUser, createOrganization)
+router.post('/', authenticateUser(true), createOrganization)
 router.put('/:id', authenticateUser, updateOrganization)
 
 export default router

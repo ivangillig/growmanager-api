@@ -1,8 +1,9 @@
 import Organization from '../models/Organization.js'
+import User from '../models/User.js'
 import {
   ORGANIZATION_CREATED_SUCCESSFULLY,
   ORGANIZATION_UPDATED_SUCCESSFULLY,
-  ERROR_ORGANIZATION_NOT_FOUND
+  ERROR_ORGANIZATION_NOT_FOUND,
 } from '../constants/messages.js'
 import {
   buildSuccessResponse,
@@ -16,6 +17,11 @@ export const createOrganization = async (req, res) => {
 
     const organization = new Organization({ name, description })
     await organization.save()
+
+    // Update the user's organization field
+    const user = await User.findById(req.user._id)
+    user.organization = organization._id
+    await user.save()
 
     return res.json(
       buildSuccessResponse({
