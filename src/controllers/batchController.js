@@ -23,7 +23,7 @@ import {
 
 export const getAllBatches = async (req, res) => {
   try {
-    const data = await getAllBatchesService()
+    const data = await getAllBatchesService(req, res)
     res.json(buildSuccessResponse({ data }))
   } catch (error) {
     res

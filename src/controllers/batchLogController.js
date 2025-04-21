@@ -16,6 +16,7 @@ import {
   deleteBatchLogService,
   getBatchLogsService,
 } from '../services/batchLogService.js'
+import { validationResult, query } from 'express-validator'
 
 export const createBatchLog = async (req, res) => {
   try {
@@ -56,10 +57,19 @@ export const deleteBatchLog = async (req, res) => {
 
 export const getBatchLogs = async (req, res) => {
   const { id: batchId } = req.params
-  const limit = parseInt(req.query.limit)
-  const page = parseInt(req.query.page)
+
+  const limit = parseInt(req.query.limit) || 10
+  const page = parseInt(req.query.page) || 1
   const eventTypes = req.query.eventType ? req.query.eventType.split(',') : null
-  const { sortField, sortOrder } = req.query
+  const sortField = req.query.sortField || 'createdAt'
+  const sortOrder = req.query.sortOrder === 'desc' ? -1 : 1
+
+  if (isNaN(limit) || isNaN(page) || limit <= 0 || page <= 0) {
+    return res.status(400).json({
+      error:
+        'Invalid pagination parameters. Limit and page must be positive numbers.',
+    })
+  }
 
   try {
     const { logs, totalLogs } = await getBatchLogsService(

@@ -22,6 +22,11 @@ const batchLogBaseSchema = new mongoose.Schema(
       maxlength: 500,
       required: false,
     },
+    organization: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Organization',
+      required: true,
+    },
   },
   baseOptions
 )

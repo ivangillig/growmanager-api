@@ -62,6 +62,11 @@ const batchSchema = new mongoose.Schema(
       type: Date,
       required: false,
     },
+    organization: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Organization',
+      required: true,
+    },
   },
   {
     timestamps: true,

@@ -30,7 +30,7 @@ export const createOrganization = async (req, res) => {
       })
     )
   } catch (error) {
-    return res.json(getServerErrorResponse(error.message))
+    return res.status(500).json(getServerErrorResponse(error.message))
   }
 }
 
@@ -56,6 +56,6 @@ export const updateOrganization = async (req, res) => {
       })
     )
   } catch (error) {
-    return res.json(getServerErrorResponse(error.message))
+    return res.status(500).json(getServerErrorResponse(error.message))
   }
 }

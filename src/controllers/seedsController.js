@@ -13,6 +13,7 @@ import {
 import path from 'path'
 import fs from 'fs'
 import multer from 'multer'
+import User from '../models/User.js'
 
 const upload = multer({
   dest: 'uploads/',
@@ -31,7 +32,9 @@ const upload = multer({
 
 export const getAllSeeds = async (req, res) => {
   try {
-    const seeds = await Seed.find().select(
+    const user = await User.findById(req.user._id)
+
+    const seeds = await Seed.find({ organization: user.organization }).select(
       '_id genetic seedBank chemoType cannabinoids imageUrl ratio dominance'
     )
     res.json(seeds)

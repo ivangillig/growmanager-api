@@ -4,6 +4,7 @@ import {
   ERROR_SEED_NOT_FOUND,
   ERROR_BATCH_NOT_FOUND,
 } from '../constants/messages.js'
+import User from '../models/User.js'
 
 export const generateBatchCode = async (productionDate, seedId) => {
   const seed = await Seed.findById(seedId)
@@ -22,8 +23,13 @@ export const generateBatchCode = async (productionDate, seedId) => {
   return `${dateStr}-${genetic}-${batchNumber}`
 }
 
-export const getAllBatchesService = async () => {
-  return await Batch.find().populate('seedId', 'genetic')
+export const getAllBatchesService = async (req, res) => {
+  const user = await User.findById(req.user._id)
+
+  return await Batch.find({ organization: user.organization }).populate(
+    'seedId',
+    'genetic'
+  )
 }
 
 export const createBatchService = async (batchData) => {
