@@ -35,10 +35,10 @@ export const getAllSeeds = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
 
-    const seeds = await Seed.find({ organization: user.organization }).select(
+    const data = await Seed.find({ organization: user.organization }).select(
       '_id genetic seedBank chemoType cannabinoids imageUrl ratio dominance'
     )
-    res.json(seeds)
+    res.json(buildSuccessResponse({ data }))
   } catch (error) {
     res.status(500).json({
       message: ERROR_FETCHING_SEEDS,

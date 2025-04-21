@@ -35,10 +35,10 @@ export const getAllBatchesService = async (req, res) => {
 
 export const createBatchService = async (user, batchData) => {
   const organization = await getOrganization(user)
-  
+
   const newBatch = new Batch({ ...batchData, organization: organization._id })
   await newBatch.save()
-  return newBatch
+  return await newBatch.populate('seedId', 'genetic')
 }
 
 export const updateBatchService = async (id, batchData) => {
