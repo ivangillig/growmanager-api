@@ -14,6 +14,7 @@ import path from 'path'
 import fs from 'fs'
 import multer from 'multer'
 import User from '../models/User.js'
+import { getOrganization } from '../services/authService.js'
 
 const upload = multer({
   dest: 'uploads/',
@@ -86,6 +87,7 @@ export const createSeed = [
     }
 
     try {
+      const organization = await getOrganization(req.user)
       const newSeed = new Seed({
         genetic,
         seedBank,
@@ -94,6 +96,7 @@ export const createSeed = [
         cannabinoids,
         ratio,
         dominance,
+        organization: organization._id,
       })
 
       await newSeed.save()

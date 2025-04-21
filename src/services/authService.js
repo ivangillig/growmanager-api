@@ -1,7 +1,10 @@
 import jwt from 'jsonwebtoken'
 import Session from '../models/Session.js'
 import User from '../models/User.js'
-import { ERROR_USER_ALREADY_EXISTS } from '../constants/messages.js'
+import {
+  ERROR_ORGANIZATION_NOT_FOUND,
+  ERROR_USER_ALREADY_EXISTS,
+} from '../constants/messages.js'
 
 export const invalidateToken = async (token) => {
   await Session.findOneAndDelete({ token })
@@ -31,4 +34,13 @@ export const createUser = async ({ email, password, username, role }) => {
       role: user.role,
     },
   }
+}
+
+export const getOrganization = async (user) => {
+  const foundUser = await User.findById(user._id).populate('organization')
+  
+  if (!foundUser.organization) {
+    throw new Error(ERROR_ORGANIZATION_NOT_FOUND)
+  }
+  return foundUser.organization
 }

@@ -3,7 +3,6 @@ import {
   ERROR_UPDATING_BATCH_LOG,
   ERROR_DELETING_BATCH_LOG,
   SUCCESS_BATCH_LOG_DELETED,
-  SUCCESS_BATCH_LOG_CREATED,
   ERROR_FETCHING_BATCH_LOGS,
 } from '../constants/messages.js'
 import {
@@ -16,11 +15,10 @@ import {
   deleteBatchLogService,
   getBatchLogsService,
 } from '../services/batchLogService.js'
-import { validationResult, query } from 'express-validator'
 
 export const createBatchLog = async (req, res) => {
   try {
-    const newBatchLog = await createBatchLogService(req.body)
+    const newBatchLog = await createBatchLogService(req.body, req.user)
     res.status(201).json(buildSuccessResponse({ batchLog: newBatchLog }))
   } catch (error) {
     res

@@ -51,7 +51,7 @@ export const createBatch = async (req, res) => {
   try {
     const batchCode = await generateBatchCode(new Date(productionDate), seedId)
 
-    const newBatch = await createBatchService({
+    const newBatch = await createBatchService(req.user, {
       batchCode,
       productionDate,
       seedId,
