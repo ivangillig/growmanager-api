@@ -1,10 +1,16 @@
 import BatchLog from '../models/BatchLog.js'
 import Batch from '../models/Batch.js'
 import { ERROR_BATCH_NOT_FOUND } from '../constants/messages.js'
+import { getOrganization } from './authService.js'
 
-export const createBatchLogService = async (batchLogData) => {
+export const createBatchLogService = async (batchLogData, user) => {
+  const organization = await getOrganization(user)
   const { eventType, ...data } = batchLogData
-  const newBatchLog = new BatchLog({ ...data, eventType })
+  const newBatchLog = new BatchLog({
+    ...data,
+    eventType,
+    organization: organization._id,
+  })
   await newBatchLog.save()
   return newBatchLog
 }

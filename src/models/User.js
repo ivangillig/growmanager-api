@@ -13,18 +13,21 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minlength: 6,
+      minlength: 8,
     },
     username: {
       type: String,
       required: true,
-      unique: true,
       trim: true,
     },
     role: {
       type: String,
       required: true,
       enum: ['admin', 'grower', 'seller', 'patient'],
+    },
+    organization: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Organization',
     },
   },
   {

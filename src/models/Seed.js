@@ -34,6 +34,11 @@ const seedSchema = new mongoose.Schema(
       enum: ['THC', 'CBD', 'CBG', 'CBN', 'CBC'],
       default: [],
     },
+    organization: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Organization',
+      required: true,
+    },
   },
   {
     timestamps: true,

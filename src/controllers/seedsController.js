@@ -13,6 +13,8 @@ import {
 import path from 'path'
 import fs from 'fs'
 import multer from 'multer'
+import User from '../models/User.js'
+import { getOrganization } from '../services/authService.js'
 
 const upload = multer({
   dest: 'uploads/',
@@ -31,10 +33,12 @@ const upload = multer({
 
 export const getAllSeeds = async (req, res) => {
   try {
-    const seeds = await Seed.find().select(
+    const user = await User.findById(req.user._id)
+
+    const data = await Seed.find({ organization: user.organization }).select(
       '_id genetic seedBank chemoType cannabinoids imageUrl ratio dominance'
     )
-    res.json(seeds)
+    res.json(buildSuccessResponse({ data }))
   } catch (error) {
     res.status(500).json({
       message: ERROR_FETCHING_SEEDS,
@@ -83,6 +87,7 @@ export const createSeed = [
     }
 
     try {
+      const organization = await getOrganization(req.user)
       const newSeed = new Seed({
         genetic,
         seedBank,
@@ -91,6 +96,7 @@ export const createSeed = [
         cannabinoids,
         ratio,
         dominance,
+        organization: organization._id,
       })
 
       await newSeed.save()

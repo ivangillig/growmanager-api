@@ -5,47 +5,40 @@ import {
   buildSuccessResponse,
   getServerErrorResponse,
 } from '../utils/responseUtils.js'
-import { ERROR_LOGOUT, LOGOUT_SUCCESSFUL } from '../constants/messages.js'
-import { invalidateToken } from '../services/authService.js'
+import {
+  ERROR_LOGOUT,
+  LOGOUT_SUCCESSFUL,
+  ERROR_INVALID_CREDENTIALS,
+  ERROR_PASSWORDS_DO_NOT_MATCH,
+  ERROR_INVALID_PASSWORD_FORMAT,
+  ERROR_CREATING_USER,
+} from '../constants/messages.js'
+import { invalidateToken, createUser } from '../services/authService.js'
 
 export const register = async (req, res) => {
   try {
-    const { email, password, name } = req.body
+    const { email, password, confirmPassword, username } = req.body
 
-    const userExists = await User.findOne({ email })
-    if (userExists) {
-      return res.status(400).json({ message: 'User already exists' })
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: ERROR_PASSWORDS_DO_NOT_MATCH })
     }
 
-    const user = new User({
+    const passwordPattern =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/
+    if (!passwordPattern.test(password)) {
+      return res.status(400).json({ message: ERROR_INVALID_PASSWORD_FORMAT })
+    }
+
+    const { token, user } = await createUser({
       email,
       password,
-      name,
+      username,
+      role: 'admin',
     })
 
-    await user.save()
-
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: process.env.JWT_EXPIRES_IN,
-      }
-    )
-
-    res.status(201).json({
-      token,
-      user: {
-        id: user._id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-      },
-    })
+    res.status(201).json({ token, user })
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: 'Error creating user', error: error.message })
+    res.status(422).json({ message: ERROR_CREATING_USER, error: error.message })
   }
 }
 
@@ -53,14 +46,14 @@ export const login = async (req, res) => {
   try {
     const { username, password } = req.body
 
-    const user = await User.findOne({ username })
+    const user = await User.findOne({ username }).populate('organization')
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' })
+      return res.status(401).json({ message: ERROR_INVALID_CREDENTIALS })
     }
 
     const isMatch = await user.comparePassword(password)
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' })
+      return res.status(401).json({ message: ERROR_INVALID_CREDENTIALS })
     }
 
     const token = jwt.sign(
@@ -87,6 +80,7 @@ export const login = async (req, res) => {
         email: user.email,
         name: user.name,
         role: user.role,
+        organization: user.organization,
       },
     })
   } catch (error) {
