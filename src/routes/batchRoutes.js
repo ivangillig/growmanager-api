@@ -23,6 +23,7 @@ const validateBatch = [
   check('thc').optional().isNumeric(),
   check('cbd').optional().isNumeric(),
   check('dryingTime').optional().isNumeric(),
+  check('curingTime').optional().isNumeric(),
   check('qtyProduced').optional().isNumeric(),
   check('rav').optional().isString(),
   check('germinationDate')
@@ -34,6 +35,7 @@ const validateBatch = [
   check('firstTransplateDate').optional().isISO8601().toDate(),
   check('secondTransplateDate').optional().isISO8601().toDate(),
   check('photoperiodChangeDate').optional().isISO8601().toDate(),
+  check('cuttingDate').optional().isISO8601().toDate(),
 ]
 
 const handleValidationErrors = (req, res, next) => {

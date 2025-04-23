@@ -34,6 +34,10 @@ const batchSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
+    curingTime: {
+      type: Number,
+      required: false,
+    },
     rav: {
       type: String,
       required: false,
