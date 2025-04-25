@@ -17,9 +17,7 @@ export const authenticateToken = (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1]
 
   if (!token) {
-    return res
-      .status(401)
-      .json(getUnauthorizedErrorResponse(ERROR_INVALID_TOKEN))
+    return next(getUnauthorizedErrorResponse(ERROR_INVALID_TOKEN))
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
@@ -28,7 +26,7 @@ export const authenticateToken = (req, res, next) => {
         err.name === 'TokenExpiredError'
           ? ERROR_SESSION_EXPIRED
           : ERROR_INVALID_TOKEN
-      return res.status(403).json(getUnauthorizedErrorResponse(errorMessage))
+      return next(getUnauthorizedErrorResponse(errorMessage))
     }
     req.user = user
     next()
@@ -78,9 +76,7 @@ export const authorizeRoles = (...allowedRoles) => {
     )
 
     if (!isAuthorized) {
-      return res
-        .status(403)
-        .json(getUnauthorizedErrorResponse(ERROR_UNAUTHORIZED))
+      return next(getUnauthorizedErrorResponse(ERROR_UNAUTHORIZED))
     }
     next()
   }
