@@ -1,18 +1,4 @@
-import Batch from '../models/Batch.js'
-import Seed from '../models/Seed.js'
-import {
-  ERROR_CREATING_BATCH,
-  ERROR_FETCHING_BATCHES,
-  ERROR_UPDATING_BATCH,
-  ERROR_DELETING_BATCH,
-  ERROR_INVALID_INPUT,
-  ERROR_BATCH_NOT_FOUND,
-} from '../constants/messages.js'
-import {
-  buildSuccessResponse,
-  getBusinessErrorResponse,
-  getServerErrorResponse,
-} from '../utils/responseUtils.js'
+import { buildSuccessResponse } from '../utils/responseUtils.js'
 import {
   generateBatchCode,
   getAllBatchesService,
@@ -21,18 +7,16 @@ import {
   deleteBatchService,
 } from '../services/batchService.js'
 
-export const getAllBatches = async (req, res) => {
+export const getAllBatches = async (req, res, next) => {
   try {
-    const data = await getAllBatchesService(req, res)
+    const data = await getAllBatchesService(req, res, next)
     res.json(buildSuccessResponse({ data }))
   } catch (error) {
-    res
-      .status(500)
-      .json(getServerErrorResponse(ERROR_FETCHING_BATCHES, error.message))
+    next(error)
   }
 }
 
-export const createBatch = async (req, res) => {
+export const createBatch = async (req, res, next) => {
   const {
     productionDate,
     seedId,
@@ -51,35 +35,41 @@ export const createBatch = async (req, res) => {
   } = req.body
 
   try {
-    const batchCode = await generateBatchCode(new Date(productionDate), seedId)
-
-    const newBatch = await createBatchService(req.user, {
-      batchCode,
-      productionDate,
+    const batchCode = await generateBatchCode(
+      new Date(productionDate),
       seedId,
-      thc,
-      cbd,
-      dryingTime,
-      curingTime,
-      qtyProduced,
-      rav,
-      germinationDate,
-      cuttingDate,
-      isCutting,
-      firstTransplateDate,
-      secondTransplateDate,
-      photoperiodChangeDate,
-    })
+      next
+    )
+
+    const newBatch = await createBatchService(
+      req.user,
+      {
+        batchCode,
+        productionDate,
+        seedId,
+        thc,
+        cbd,
+        dryingTime,
+        curingTime,
+        qtyProduced,
+        rav,
+        germinationDate,
+        cuttingDate,
+        isCutting,
+        firstTransplateDate,
+        secondTransplateDate,
+        photoperiodChangeDate,
+      },
+      next
+    )
 
     res.status(201).json(buildSuccessResponse({ batch: newBatch }))
   } catch (error) {
-    res
-      .status(500)
-      .json(getServerErrorResponse(ERROR_CREATING_BATCH, error.message))
+    next(error)
   }
 }
 
-export const updateBatch = async (req, res) => {
+export const updateBatch = async (req, res, next) => {
   const { id } = req.params
   const {
     productionDate,
@@ -99,40 +89,40 @@ export const updateBatch = async (req, res) => {
   } = req.body
 
   try {
-    const updatedBatch = await updateBatchService(id, {
-      productionDate,
-      seedId,
-      thc,
-      cbd,
-      dryingTime,
-      qtyProduced,
-      curingTime,
-      rav,
-      germinationDate,
-      cuttingDate,
-      isCutting,
-      firstTransplateDate,
-      secondTransplateDate,
-      photoperiodChangeDate,
-    })
+    const updatedBatch = await updateBatchService(
+      id,
+      {
+        productionDate,
+        seedId,
+        thc,
+        cbd,
+        dryingTime,
+        qtyProduced,
+        curingTime,
+        rav,
+        germinationDate,
+        cuttingDate,
+        isCutting,
+        firstTransplateDate,
+        secondTransplateDate,
+        photoperiodChangeDate,
+      },
+      next
+    )
 
     res.json(buildSuccessResponse({ batch: updatedBatch }))
   } catch (error) {
-    res
-      .status(500)
-      .json(getServerErrorResponse(ERROR_UPDATING_BATCH, error.message))
+    next(error)
   }
 }
 
-export const deleteBatch = async (req, res) => {
+export const deleteBatch = async (req, res, next) => {
   const { id } = req.params
 
   try {
     await deleteBatchService(id)
     res.json(buildSuccessResponse({ message: 'Batch deleted successfully' }))
   } catch (error) {
-    res
-      .status(500)
-      .json(getServerErrorResponse(ERROR_DELETING_BATCH, error.message))
+    next(error)
   }
 }

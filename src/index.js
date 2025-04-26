@@ -5,6 +5,7 @@ import connectDB from './config/database.js'
 import routes from './routes/index.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { ERROR_GENERIC } from './utils/responseUtils.js'
 
 dotenv.config()
 const __filename = fileURLToPath(import.meta.url)
@@ -31,25 +32,20 @@ connectDB()
 // Use the defined routes
 app.use('/api', routes)
 
+// Global error handler
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode
+    ? err.statusCode
+    : err.status
+    ? err.status
+    : 500
+  const message = err.statusCode || err.status ? err.message : ERROR_GENERIC
+  res.status(statusCode).send({ statusCode, success: false, message })
+})
+
+// Start the server
 app.listen(PORT, () => {
   const baseUrl = `http://localhost:${PORT}`
   console.log(`Server running on port ${PORT}`)
   console.log(`Web server listening at: ${baseUrl}`)
-})
-
-// Global error handler
-app.use((err, req, res, next) => {
-  if (err.statusCode) {
-    return res.status(err.statusCode).json({
-      success: false,
-      message: err.message,
-      errorCause: err.errorCause || null,
-    })
-  }
-
-  // Fallback for unexpected errors
-  res.status(500).json({
-    success: false,
-    message: 'Internal Server Error',
-  })
 })

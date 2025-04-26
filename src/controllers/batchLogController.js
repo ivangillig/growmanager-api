@@ -1,14 +1,5 @@
-import {
-  ERROR_CREATING_BATCH_LOG,
-  ERROR_UPDATING_BATCH_LOG,
-  ERROR_DELETING_BATCH_LOG,
-  SUCCESS_BATCH_LOG_DELETED,
-  ERROR_FETCHING_BATCH_LOGS,
-} from '../constants/messages.js'
-import {
-  buildSuccessResponse,
-  getServerErrorResponse,
-} from '../utils/responseUtils.js'
+import { SUCCESS_BATCH_LOG_DELETED } from '../constants/messages.js'
+import { buildSuccessResponse } from '../utils/responseUtils.js'
 import {
   createBatchLogService,
   updateBatchLogService,
@@ -16,44 +7,38 @@ import {
   getBatchLogsService,
 } from '../services/batchLogService.js'
 
-export const createBatchLog = async (req, res) => {
+export const createBatchLog = async (req, res, next) => {
   try {
-    const newBatchLog = await createBatchLogService(req.body, req.user)
+    const newBatchLog = await createBatchLogService(req.body, req.user, next)
     res.status(201).json(buildSuccessResponse({ batchLog: newBatchLog }))
   } catch (error) {
-    res
-      .status(500)
-      .json(getServerErrorResponse(ERROR_CREATING_BATCH_LOG, error.message))
+    next(error)
   }
 }
 
-export const updateBatchLog = async (req, res) => {
+export const updateBatchLog = async (req, res, next) => {
   const { id } = req.params
 
   try {
-    const updatedBatchLog = await updateBatchLogService(id, req.body)
+    const updatedBatchLog = await updateBatchLogService(id, req.body, next)
     res.json(buildSuccessResponse({ batchLog: updatedBatchLog }))
   } catch (error) {
-    res
-      .status(500)
-      .json(getServerErrorResponse(ERROR_UPDATING_BATCH_LOG, error.message))
+    next(error)
   }
 }
 
-export const deleteBatchLog = async (req, res) => {
+export const deleteBatchLog = async (req, res, next) => {
   const { id } = req.params
 
   try {
-    await deleteBatchLogService(id)
+    await deleteBatchLogService(id, next)
     res.json(buildSuccessResponse({ message: SUCCESS_BATCH_LOG_DELETED }))
   } catch (error) {
-    res
-      .status(500)
-      .json(getServerErrorResponse(ERROR_DELETING_BATCH_LOG, error.message))
+    next(error)
   }
 }
 
-export const getBatchLogs = async (req, res) => {
+export const getBatchLogs = async (req, res, next) => {
   const { id: batchId } = req.params
 
   const limit = parseInt(req.query.limit) || 10
@@ -89,8 +74,6 @@ export const getBatchLogs = async (req, res) => {
       })
     )
   } catch (error) {
-    res
-      .status(500)
-      .json(getServerErrorResponse(ERROR_FETCHING_BATCH_LOGS, error.message))
+    next(error)
   }
 }
