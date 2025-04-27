@@ -48,6 +48,13 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password)
 }
 
+// // Method to update password
+// userSchema.methods.updatePassword = async function (newPassword) {
+//   const salt = await bcrypt.genSalt(10);
+//   this.password = await bcrypt.hash(newPassword, salt);
+//   await this.save();
+// };
+
 const User = mongoose.model('User', userSchema)
 
 export default User

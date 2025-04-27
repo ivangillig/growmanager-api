@@ -4,6 +4,8 @@ import Session from '../models/Session.js'
 import {
   buildSuccessResponse,
   getServerErrorResponse,
+  getBusinessErrorResponse,
+  getNotFoundErrorResponse,
 } from '../utils/responseUtils.js'
 import {
   ERROR_LOGOUT,
@@ -12,6 +14,8 @@ import {
   ERROR_PASSWORDS_DO_NOT_MATCH,
   ERROR_INVALID_PASSWORD_FORMAT,
   ERROR_CREATING_USER,
+  ERROR_USER_NOT_FOUND,
+  PASSWORD_UPDATED_SUCCESSFULLY,
 } from '../constants/messages.js'
 import { invalidateToken, createUser } from '../services/authService.js'
 
@@ -97,3 +101,26 @@ export const logout = async (req, res) => {
     res.status(500).json(getServerErrorResponse(ERROR_LOGOUT, error.message))
   }
 }
+
+export const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      throw getNotFoundErrorResponse(ERROR_USER_NOT_FOUND);
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      throw getBusinessErrorResponse(ERROR_INVALID_CREDENTIALS);
+    }
+
+    await user.save(newPassword);
+
+    res.json(buildSuccessResponse({ message: PASSWORD_UPDATED_SUCCESSFULLY }));
+  } catch (error) {
+    console.log(error)
+    next(error);
+  }
+};
