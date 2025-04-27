@@ -31,18 +31,31 @@ export const generateBatchCode = async (productionDate, seedId) => {
   }
 }
 
-export const getAllBatchesService = async (req, res, next) => {
+export const getAllBatchesService = async (
+  user,
+  { page, limit, search },
+  next
+) => {
   try {
-    const user = await User.findById(req.user._id)
-    if (!user) {
+    const userRecord = await User.findById(user._id)
+    if (!userRecord) {
       throw getNotFoundErrorResponse(ERROR_USER_NOT_FOUND)
     }
 
-    const batches = await Batch.find({ organization: user.organization })
+    const query = {
+      organization: userRecord.organization,
+      ...(search && { batchCode: { $regex: search, $options: 'i' } }),
+    }
+
+    const batches = await Batch.find(query)
       .populate('seedId', 'genetic')
       .sort({ productionDate: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit)
 
-    return batches
+    const total = await Batch.countDocuments(query)
+
+    return { batches, pagination: { total, page, limit } }
   } catch (error) {
     next(error)
   }

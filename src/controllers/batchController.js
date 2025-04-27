@@ -8,8 +8,14 @@ import {
 } from '../services/batchService.js'
 
 export const getAllBatches = async (req, res, next) => {
+  const { page = 1, limit = 10, search = '' } = req.query
+
   try {
-    const data = await getAllBatchesService(req, res, next)
+    const data = await getAllBatchesService(
+      req.user,
+      { page, limit, search },
+      next
+    )
     res.json(buildSuccessResponse({ data }))
   } catch (error) {
     next(error)

@@ -4,22 +4,29 @@ import {
   ORGANIZATION_CREATED_SUCCESSFULLY,
   ORGANIZATION_UPDATED_SUCCESSFULLY,
   ERROR_ORGANIZATION_NOT_FOUND,
+  ERROR_USER_ALREADY_HAS_ORGANIZATION
 } from '../constants/messages.js'
 import {
   buildSuccessResponse,
   getServerErrorResponse,
   getNotFoundErrorResponse,
+  getBusinessErrorResponse,
 } from '../utils/responseUtils.js'
 
-export const createOrganization = async (req, res) => {
+export const createOrganization = async (req, res, next) => {
   try {
+    const user = await User.findById(req.user._id)
+
+    // Check if the user already has an organization assigned
+    if (user.organization) {
+      throw getBusinessErrorResponse(ERROR_USER_ALREADY_HAS_ORGANIZATION)
+    }
+
     const { name, description } = req.body
 
     const organization = new Organization({ name, description })
     await organization.save()
 
-    // Update the user's organization field
-    const user = await User.findById(req.user._id)
     user.organization = organization._id
     await user.save()
 
@@ -30,7 +37,7 @@ export const createOrganization = async (req, res) => {
       })
     )
   } catch (error) {
-    return res.status(500).json(getServerErrorResponse(error.message))
+    next(error)
   }
 }
 

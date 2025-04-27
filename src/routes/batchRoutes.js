@@ -9,7 +9,7 @@ import {
   updateBatch,
   deleteBatch,
 } from '../controllers/batchController.js'
-import { check, validationResult } from 'express-validator'
+import { check, validationResult, query } from 'express-validator'
 import {
   ERROR_SEED_ID_REQUIRED,
   ERROR_GERMINATION_DATE_REQUIRED,
@@ -38,6 +38,12 @@ const validateBatch = [
   check('cuttingDate').optional().isISO8601().toDate(),
 ]
 
+const validateQueryParams = [
+  query('page').optional().isInt({ min: 1 }).toInt(),
+  query('limit').optional().isInt({ min: 1 }).toInt(),
+  query('search').optional().isString(),
+]
+
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
@@ -50,6 +56,8 @@ router.get(
   '/',
   authenticateUser(),
   authorizeRoles('admin', 'grower'),
+  validateQueryParams,
+  handleValidationErrors,
   getAllBatches
 )
 router.post(
