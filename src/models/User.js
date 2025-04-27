@@ -20,6 +20,16 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    firstName: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      required: false,
+      trim: true,
+    },
     role: {
       type: String,
       required: true,

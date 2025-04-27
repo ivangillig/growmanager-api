@@ -85,6 +85,8 @@ export const login = async (req, res) => {
         username: user.username,
         role: user.role,
         organization: user.organization,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
     })
   } catch (error) {
@@ -116,11 +118,12 @@ export const changePassword = async (req, res, next) => {
       throw getBusinessErrorResponse(ERROR_INVALID_CREDENTIALS);
     }
 
-    await user.save(newPassword);
+    // Assign the new password to the user object
+    user.password = newPassword;
+    await user.save();
 
     res.json(buildSuccessResponse({ message: PASSWORD_UPDATED_SUCCESSFULLY }));
   } catch (error) {
-    console.log(error)
     next(error);
   }
 };
