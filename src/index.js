@@ -28,7 +28,6 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 connectDB();
 
-// Use the defined routes
 app.use("/api", routes);
 
 app.listen(PORT, () => {

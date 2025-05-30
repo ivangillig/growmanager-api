@@ -8,3 +8,4 @@ router.get('/', authenticateUser, getAllSeedBanks);
 router.post('/', authenticateUser, createSeedBank);
 
 export default router;
+

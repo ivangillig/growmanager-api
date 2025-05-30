@@ -12,10 +12,9 @@ const users = [
 
 export const seedUsers = async () => {
   try {
-    // Clear existing users
+
     await User.deleteMany({})
 
-    // Insert new users
     const createdUsers = await User.create(users)
     console.log('Users seeded successfully:', createdUsers.length)
 
