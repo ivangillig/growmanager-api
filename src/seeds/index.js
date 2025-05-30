@@ -4,7 +4,7 @@ import { seedSeeds } from './seeds.seed.js';
 
 const runSeeds = async () => {
   try {
-    await mongoose.connect('mongodb://localhost:27018/growmanager', {
+    await mongoose.connect('mongodb://localhost:27017/growmanager', {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });

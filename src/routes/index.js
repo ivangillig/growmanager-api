@@ -5,6 +5,7 @@ import batchRoutes from './batchRoutes.js'
 import batchLogRoutes from './batchLogRoutes.js'
 import organizationRoutes from './organization.routes.js'
 import userRoutes from './userRoutes.js'
+import seedbankroutes from './seedBankRoutes.js'
 
 const router = Router()
 
@@ -20,5 +21,6 @@ router.use('/batch', batchRoutes)
 router.use('/batchlog', batchLogRoutes)
 router.use('/organizations', organizationRoutes)
 router.use('/user', userRoutes)
+router.use('/seedBanks', seedbankroutes)
 
 export default router
